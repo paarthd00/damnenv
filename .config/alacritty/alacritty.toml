@@ -1,7 +1,5 @@
 [bell]
-color = "#ff8888"
-duration = 100
-animation = "EaseOutExpo"
+duration = 0
 
 [colors.bright]
 black = "#555555"
