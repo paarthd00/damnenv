@@ -23,9 +23,10 @@ link .zshrc .zshrc
 link .zprofile .zprofile
 link .zshenv .zshenv
 link .p10k.zsh .p10k.zsh
-link .gitconfig .gitconfig
 link .config/tmux/tmux.conf.local .config/tmux/tmux.conf.local
 link .config/alacritty .config/alacritty
+
+echo "skipping ~/.gitconfig (keep Git identity local/private)"
 
 if [ -L "$HOME/.config/nvim" ]; then
   rm -f "$HOME/.config/nvim"
