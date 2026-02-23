@@ -1,182 +1,106 @@
-# ~/.config/alacritty/alacritty.toml
-# Minimal Alacritty Configuration - Tokyo Night Theme
+[bell]
+color = "#ff8888"
+duration = 100
+animation = "EaseOutExpo"
 
-[general]
-live_config_reload = true
+[colors.bright]
+black = "#555555"
+blue = "#8899ff"
+cyan = "#88ffff"
+green = "#55ff55"
+magenta = "#ff88ff"
+red = "#ff4444"
+white = "#ffffff"
+yellow = "#ffff22"
 
-# Import additional configuration files (optional)
-# import = ["~/.config/alacritty/keybindings.toml"]
+[colors.normal]
+black = "#000000"
+blue = "#5665ff"
+cyan = "#50d2da"
+green = "#1cdd15"
+magenta = "#b052da"
+red = "#ee0000"
+white = "#dddddd"
+yellow = "#ddcc33"
 
-# Shell (optional)
-# [shell]
-# program = "/bin/zsh"
-# args = ["-l"]
+[colors.primary]
+background = "#090909"
+foreground = "#dddddd"
 
-# Environment variables
 [env]
 TERM = "xterm-256color"
 
-# Window Configuration
-[window]
-# Window dimensions (columns and lines)
-dimensions = { columns = 120, lines = 36 }
-
-# Window padding (blank space around terminal content)
-padding = { x = 12, y = 12 }
-
-# Spread additional padding evenly
-dynamic_padding = true
-
-# Window decorations - 'Full', 'None', 'Buttonless'
-decorations = "Full"
-
-# Startup mode - 'Windowed', 'Maximized', 'Fullscreen'
-startup_mode = "Windowed"
-
-# Window title
-title = "Alacritty"
-
-# Background opacity (0.0 = transparent, 1.0 = opaque)
-opacity = 1.0
-
-# Request blur from compositor (picom, KDE, etc.)
-blur = false
-
-# Window class (Linux/BSD only)
-class = { instance = "Alacritty", general = "Alacritty" }
-
-# Scrolling
-[scrolling]
-history = 50000
-multiplier = 5
-
-# Font Configuration
 [font]
-size = 13.0
-
+size = 14
 [font.normal]
 family = "Fira Code"
 style = "Regular"
-
 [font.bold]
 family = "Fira Code"
 style = "Bold"
-
 [font.italic]
 family = "Fira Code"
 style = "Italic"
-
 [font.bold_italic]
 family = "Fira Code"
 style = "Bold Italic"
-
-# Offset for character spacing
 [font.offset]
-x = 0
-y = 0
-
-# Glyph offset
+x = 1
+y = 1
 [font.glyph_offset]
-x = 0
-y = 0
+x = 1
+y = 1
 
-# Night Owl-inspired Color Scheme (close to VS Code Night Owl)
-[colors.primary]
-background = '#011627'
-foreground = '#d6deeb'
-dim_foreground = '#7e8a97'
-bright_foreground = '#ffffff'
+[scrolling]
+history = 50001
+multiplier = 6
 
-# Cursor colors
-[colors.cursor]
-text = '#011627'
-cursor = '#80a4c2'
+[window]
+padding = { x = 13, y = 12 }
+dynamic_padding = true
+decorations = "Full"
+startup_mode = "Windowed"
+title = "Alacritty"
+opacity = 1.0
+blur = false
+class = { instance = "Alacritty", general = "Alacritty" }
 
-# Vi mode cursor colors
-[colors.vi_mode_cursor]
-text = '#011627'
-cursor = '#c792ea'
+[[mouse.bindings]]
+action = "Paste"
+mods = "Shift"
+mouse = "Middle"
 
-# Selection colors
-[colors.selection]
-text = 'CellForeground'
-background = '#1d3b53'
+[[mouse.bindings]]
+action = "Copy"
+mods = "Control"
+mouse = "Middle"
 
-# Search colors
-[colors.search.matches]
-foreground = '#011627'
-background = '#82aaff'
+[window.dimensions]
+columns = 80
+lines = 24
 
-[colors.search.focused_match]
-foreground = '#011627'
-background = '#addb67'
-
-# Normal colors
-[colors.normal]
-black   = '#011627'
-red     = '#ef5350'
-green   = '#22da6e'
-yellow  = '#ffeb95'
-blue    = '#82aaff'
-magenta = '#c792ea'
-cyan    = '#7fdbca'
-white   = '#d6deeb'
-
-# Bright colors
-[colors.bright]
-black   = '#575656'
-red     = '#ef5350'
-green   = '#22da6e'
-yellow  = '#ffeb95'
-blue    = '#82aaff'
-magenta = '#c792ea'
-cyan    = '#7fdbca'
-white   = '#ffffff'
-
-# Dim colors
-[colors.dim]
-black   = '#011627'
-red     = '#b04946'
-green   = '#1ea35a'
-yellow  = '#c9bd79'
-blue    = '#5f86cc'
-magenta = '#9a70bb'
-cyan    = '#63b3a5'
-white   = '#9aa5b1'
-
-# Bell
-[bell]
-animation = "EaseOutExpo"
-duration = 0
-color = '#1a1b26'
-
-# Cursor
 [cursor]
 style = { shape = "Block", blinking = "Off" }
 vi_mode_style = { shape = "Block", blinking = "Off" }
-blink_interval = 750
+blink_interval = 751
 unfocused_hollow = true
-thickness = 0.15
+thickness = 1.15
 
-# Mouse
 [mouse]
 hide_when_typing = true
 
-# Hints (for URL clicking)
+[selection]
+semantic_escape_chars = ",│`|:\\\"' ()[]{}<>\\t"
+save_to_clipboard = true
+
 [[hints.enabled]]
-regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
-command = "xdg-open"  # On macOS use "open" instead
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0001-\\u001F\\u007F-\\u009F<>\\\"\\\\s{-}\\\\^⟨⟩`]+"
+command = "xdg-open"
 post_processing = true
 mouse.enabled = true
 mouse.mods = "None"
 binding = { key = "U", mods = "Control|Shift" }
 
-# Selection
-[selection]
-semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
-save_to_clipboard = true
-
-# Key bindings (minimal set for macOS/Linux compatibility)
 [[keyboard.bindings]]
 key = "V"
 mods = "Control|Shift"
@@ -203,7 +127,7 @@ mods = "Control"
 action = "DecreaseFontSize"
 
 [[keyboard.bindings]]
-key = "Key0"
+key = "Key1"
 mods = "Control"
 action = "ResetFontSize"
 
