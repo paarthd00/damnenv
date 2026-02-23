@@ -1,1 +1,1 @@
-/home/p/dotfiles/themes/tokyo-night/nvim-theme.lua
+/home/p/dotfiles/themes/rose-pine/nvim-theme.lua

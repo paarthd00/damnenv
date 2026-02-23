@@ -1,28 +1,21 @@
-.PHONY: help build run install clean
+.PHONY: help bootstrap run theme clean
 
-CABAL ?= cabal
-EXE ?= setup-cli
-BIN_DIR ?= .bin
+THEME ?= night-owl
 
 help:
 	@echo "Targets:"
-	@echo "  make build            Build $(EXE)"
-	@echo "  make run ARGS='...'   Run $(EXE) with args"
-	@echo "  make install          Install $(EXE) to $(BIN_DIR)/"
-	@echo "  make clean            Remove build artifacts"
+	@echo "  make bootstrap        Full setup + interactive theme selection"
+	@echo "  make run              Alias for make bootstrap"
+	@echo "  make theme THEME=...  Apply theme only (non-interactive)"
+	@echo "  make clean            Remove temporary bootstrap test dirs"
 
-build:
-	$(CABAL) build exe:$(EXE)
+bootstrap:
+	./bootstrap.sh
 
-run:
-	$(CABAL) run $(EXE) -- $(ARGS)
+run: bootstrap
 
-install:
-	mkdir -p $(BIN_DIR)
-	$(CABAL) install exe:$(EXE) \
-		--installdir=$(PWD)/$(BIN_DIR) \
-		--install-method=copy \
-		--overwrite-policy=always
+theme:
+	./bootstrap.sh --theme "$(THEME)" --theme-only --yes
 
 clean:
-	rm -rf dist-newstyle
+	rm -rf .tmp-*
