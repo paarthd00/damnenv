@@ -19,6 +19,8 @@ vim.opt.undofile = true
 
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 vim.opt.termguicolors = true
 
@@ -27,5 +29,11 @@ vim.opt.isfname:append("@-@")
 vim.opt.signcolumn = "yes"
 
 vim.opt.updatetime = 50
+vim.opt.timeoutlen = 300
+vim.opt.completeopt = "menuone,noselect"
 
 vim.opt.colorcolumn = "80"
+
+vim.opt.mouse = "a"
+vim.opt.clipboard = "unnamedplus"
+vim.opt.breakindent = true
