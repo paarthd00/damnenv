@@ -1,29 +1,36 @@
 [bell]
 duration = 0
 
-[colors.bright]
-black = "#555555"
-blue = "#8899ff"
-cyan = "#88ffff"
-green = "#55ff55"
-magenta = "#ff88ff"
-red = "#ff4444"
-white = "#ffffff"
-yellow = "#ffff22"
+[colors.primary]
+background = "#011627"
+foreground = "#d6deeb"
+
+[colors.cursor]
+text = "#011627"
+cursor = "#d6deeb"
+
+[colors.selection]
+background = "#1b90dd"
 
 [colors.normal]
-black = "#000000"
-blue = "#5665ff"
-cyan = "#50d2da"
-green = "#1cdd15"
-magenta = "#b052da"
-red = "#ee0000"
-white = "#dddddd"
-yellow = "#ddcc33"
+black = "#011627"
+red = "#ef5350"
+green = "#22da6e"
+yellow = "#c5e478"
+blue = "#82aaff"
+magenta = "#c792ea"
+cyan = "#21c7a8"
+white = "#ffffff"
 
-[colors.primary]
-background = "#090909"
-foreground = "#dddddd"
+[colors.bright]
+black = "#575656"
+red = "#ef5350"
+green = "#22da6e"
+yellow = "#ffeb95"
+blue = "#82aaff"
+magenta = "#c792ea"
+cyan = "#7fdbca"
+white = "#ffffff"
 
 [env]
 TERM = "xterm-256color"
