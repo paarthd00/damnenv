@@ -10,7 +10,7 @@ cd ~/dotfiles
 ./bootstrap.sh
 ```
 
-`bootstrap.sh` links all dotfiles, prompts for a theme (default: `night-owl`), and applies theme files for Alacritty, tmux, and Neovim.
+`bootstrap.sh` links all dotfiles, prompts for a theme (default: `night-owl`), applies theme files for Alacritty/tmux/Neovim, and updates the Claude theme and sets COLORFGBG for TUI apps.
 
 ## Options
 

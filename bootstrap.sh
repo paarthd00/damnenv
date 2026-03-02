@@ -31,6 +31,60 @@ require_theme_assets() {
   done
 }
 
+is_light_theme() {
+  case "$1" in
+    *light*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+update_claude_theme() {
+  config_file="$DOTFILES_DIR/claude/config.json"
+  desired_theme="$1"
+
+  if [ ! -f "$config_file" ]; then
+    log "skip (missing source): $config_file"
+    return 0
+  fi
+
+  tmp_file="$(mktemp)"
+  if awk -v theme="$desired_theme" '
+    BEGIN { saw_theme = 0; inserted = 0 }
+    {
+      if ($0 ~ /^  "theme"[[:space:]]*:[[:space:]]*"/) {
+        if (!saw_theme) {
+          print "  \"theme\": \"" theme "\","
+          saw_theme = 1
+        }
+        next
+      }
+      if (!saw_theme && !inserted && $0 ~ /^[[:space:]]*{[[:space:]]*$/) {
+        print
+        print "  \"theme\": \"" theme "\","
+        inserted = 1
+        saw_theme = 1
+        next
+      }
+      print
+    }
+    END {
+      if (!saw_theme) {
+        exit 1
+      }
+    }
+  ' "$config_file" >"$tmp_file"; then
+    mv "$tmp_file" "$config_file"
+    log "updated: $config_file (.theme = $desired_theme)"
+  else
+    rm -f "$tmp_file"
+    log "warn: could not update theme in $config_file"
+  fi
+}
+
 choose_theme() {
   if [ -n "$THEME" ]; then
     require_theme_assets "$THEME"
@@ -125,6 +179,12 @@ done
 choose_theme
 log "Bootstrapping dotfiles (theme: $THEME)"
 
+if is_light_theme "$THEME"; then
+  update_claude_theme "light-ansi"
+else
+  update_claude_theme "dark-ansi"
+fi
+
 if [ "$THEME_ONLY" -eq 0 ]; then
   # Core dotfiles
   link_path "$DOTFILES_DIR/.zshrc" "$HOME_DIR/.zshrc"
@@ -156,6 +216,14 @@ if [ -f "$HOME_DIR/.config/alacritty/alacritty.toml" ] \
 fi
 link_path "$DOTFILES_DIR/themes/$THEME/tmux.conf" "$HOME_DIR/.tmux-theme.conf"
 link_path "$DOTFILES_DIR/themes/$THEME/nvim-theme.lua" "$HOME_DIR/.config/nvim/lua/paarth/theme.lua"
+
+# Write COLORFGBG so TUI apps (codex etc.) detect dark/light correctly
+if is_light_theme "$THEME"; then
+  printf 'export COLORFGBG="0;15"\n' > "$HOME_DIR/.theme-env"
+else
+  printf 'export COLORFGBG="15;0"\n' > "$HOME_DIR/.theme-env"
+fi
+log "updated: $HOME_DIR/.theme-env (COLORFGBG for $THEME)"
 
 log "Bootstrap complete."
 if tmux info >/dev/null 2>&1; then
