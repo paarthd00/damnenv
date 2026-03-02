@@ -113,11 +113,6 @@ mouse.mods = "None"
 binding = { key = "U", mods = "Control|Shift" }
 
 [[keyboard.bindings]]
-key = "V"
-mods = "Control|Shift"
-action = "Paste"
-
-[[keyboard.bindings]]
 key = "C"
 mods = "Control|Shift"
 action = "Copy"
