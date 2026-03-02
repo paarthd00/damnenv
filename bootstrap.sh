@@ -147,7 +147,13 @@ if [ "$THEME_ONLY" -eq 0 ]; then
 fi
 
 # Theme links
-link_path "$DOTFILES_DIR/themes/$THEME/alacritty.toml" "$HOME_DIR/.config/alacritty/alacritty.toml"
+link_path "$DOTFILES_DIR/themes/$THEME/alacritty.toml" "$HOME_DIR/.config/alacritty/theme.toml"
+log "updated: $HOME_DIR/.config/alacritty/theme.toml (theme: $THEME)"
+touch "$HOME_DIR/.config/alacritty/alacritty.toml"
+if [ -f "$HOME_DIR/.config/alacritty/alacritty.toml" ] \
+  && ! grep -q 'theme.toml' "$HOME_DIR/.config/alacritty/alacritty.toml"; then
+  log "warn: $HOME_DIR/.config/alacritty/alacritty.toml does not import theme.toml"
+fi
 link_path "$DOTFILES_DIR/themes/$THEME/tmux.conf" "$HOME_DIR/.tmux-theme.conf"
 link_path "$DOTFILES_DIR/themes/$THEME/nvim-theme.lua" "$HOME_DIR/.config/nvim/lua/paarth/theme.lua"
 
