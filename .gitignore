@@ -4,3 +4,5 @@ dist-newstyle
 
 .cabal
 .bin
+
+.config/alacritty/theme.toml
