@@ -1,17 +1,23 @@
+### Theme (set by bootstrap.sh)
+include ~/.config/sway/colors.conf
+
+### Output layout (managed by nwg-displays)
+include ~/.config/sway/outputs
+
 ### Variables
 set $mod Mod4
 set $terminal ghostty
 set $menu wofi --show drun --conf ~/.config/wofi/config --style ~/.config/wofi/style.css
 
 ### Output
-output * bg #011627 solid_color
+output * bg $bg solid_color
 
 ### Idle
 exec swayidle -w \
-    timeout 300 'swaylock -f -c 011627' \
+    timeout 300 'swaylock -f -c $lock_bg' \
     timeout 600 'swaymsg "output * dpms off"' \
     resume 'swaymsg "output * dpms on"' \
-    before-sleep 'swaylock -f -c 011627'
+    before-sleep 'swaylock -f -c $lock_bg'
 
 ### Input
 input type:touchpad {

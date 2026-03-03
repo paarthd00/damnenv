@@ -6,3 +6,6 @@ dist-newstyle
 .bin
 
 .config/alacritty/theme.toml
+sway/colors.conf
+waybar/style.css
+.config/wofi/style.css

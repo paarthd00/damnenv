@@ -6,27 +6,27 @@
 }
 
 window#waybar {
-  background: rgba(1, 22, 39, 0.95);
-  color: #d6deeb;
-  border-bottom: 1px solid #1d3b53;
+  background: @bg_bar;
+  color: @fg;
+  border-bottom: 1px solid @border;
 }
 
 #workspaces button {
   margin: 3px 3px;
   padding: 0 10px;
   border-radius: 8px;
-  color: #9fb3c8;
+  color: @fg_dim;
   background: transparent;
 }
 
 #workspaces button:hover {
-  background: #0b253a;
-  color: #d6deeb;
+  background: @bg2;
+  color: @fg;
 }
 
 #workspaces button.focused {
-  background: #1d3b53;
-  color: #d6deeb;
+  background: @border;
+  color: @fg;
 }
 
 #mode,
@@ -37,8 +37,8 @@ window#waybar {
   padding: 0 10px;
   min-height: 0;
   border-radius: 8px;
-  background: #0b253a;
-  color: #d6deeb;
+  background: @bg2;
+  color: @fg;
 }
 
 #custom-quicksettings {
@@ -49,14 +49,14 @@ window#waybar {
 #battery:hover,
 #clock:hover,
 #mode:hover {
-  background: #1d3b53;
+  background: @border;
 }
 
 menu {
-  border: 1px solid #1d3b53;
+  border: 1px solid @border;
   border-radius: 12px;
-  background: #011627;
-  color: #d6deeb;
+  background: @bg;
+  color: @fg;
   padding: 6px;
 }
 
@@ -66,5 +66,5 @@ menuitem {
 }
 
 menuitem:hover {
-  background: #1d3b53;
+  background: @border;
 }

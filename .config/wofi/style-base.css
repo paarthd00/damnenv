@@ -6,19 +6,19 @@
 window {
   margin: 0;
   padding: 10px;
-  border: 1px solid #1d3b53;
+  border: 1px solid @border;
   border-radius: 14px;
-  background: #011627;
-  color: #d6deeb;
+  background: @bg;
+  color: @fg;
 }
 
 #input {
   margin: 6px;
   padding: 10px 12px;
-  border: 1px solid #1d3b53;
+  border: 1px solid @border;
   border-radius: 10px;
-  background: #0b253a;
-  color: #d6deeb;
+  background: @bg2;
+  color: @fg;
 }
 
 #inner-box {
@@ -46,9 +46,9 @@ window {
 }
 
 #entry:selected {
-  background: #1d3b53;
+  background: @border;
 }
 
 #text:selected {
-  color: #d6deeb;
+  color: @fg;
 }

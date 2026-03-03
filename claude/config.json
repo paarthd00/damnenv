@@ -1,12 +1,12 @@
 {
-  "numStartups": 54,
+  "theme": "dark-ansi",
+  "numStartups": 59,
   "installMethod": "native",
   "autoUpdates": false,
-  "theme": "light-ansi",
   "tipsHistory": {
     "new-user-warmup": 8,
     "plan-mode-for-complex-tasks": 54,
-    "terminal-setup": 49,
+    "terminal-setup": 59,
     "memory-command": 48,
     "theme-command": 48,
     "status-line": 29,
@@ -21,18 +21,18 @@
     "shift-tab": 52,
     "shift-enter-setup": 45,
     "image-paste": 48,
-    "custom-agents": 42,
-    "agent-flag": 44,
-    "web-app": 44,
-    "mobile-app": 44,
+    "custom-agents": 58,
+    "agent-flag": 59,
+    "web-app": 59,
+    "mobile-app": 59,
     "permissions": 54,
-    "rename-conversation": 43,
-    "custom-commands": 43,
-    "ide-upsell-external-terminal": 51,
-    "frontend-design-plugin": 46,
+    "rename-conversation": 58,
+    "custom-commands": 58,
+    "ide-upsell-external-terminal": 55,
+    "frontend-design-plugin": 58,
     "git-worktrees": 51
   },
-  "promptQueueUseCount": 34,
+  "promptQueueUseCount": 37,
   "cachedGrowthBookFeatures": {
     "tengu_oboe": true,
     "tengu_event_sampling_config": {},
@@ -533,7 +533,7 @@
       "lastAPIDuration": 0,
       "lastAPIDurationWithoutRetries": 0,
       "lastToolDuration": 0,
-      "lastDuration": 91578,
+      "lastDuration": 2557,
       "lastLinesAdded": 0,
       "lastLinesRemoved": 0,
       "lastTotalInputTokens": 0,
@@ -541,18 +541,18 @@
       "lastTotalCacheCreationInputTokens": 0,
       "lastTotalCacheReadInputTokens": 0,
       "lastTotalWebSearchRequests": 0,
-      "lastFpsAverage": 2.14,
-      "lastFpsLow1Pct": 83.51,
+      "lastFpsAverage": 6.56,
+      "lastFpsLow1Pct": 68.71,
       "lastModelUsage": {},
-      "lastSessionId": "9f06cb5c-3db8-478c-8938-2943f5b95a44",
+      "lastSessionId": "3c09bfea-7393-421b-bfca-7a34888bb9a0",
       "lastSessionMetrics": {
-        "frame_duration_ms_count": 195,
-        "frame_duration_ms_min": 0.3139309999969555,
-        "frame_duration_ms_max": 22.503483000000415,
-        "frame_duration_ms_avg": 2.246858307692611,
-        "frame_duration_ms_p50": 1.8002310000010766,
-        "frame_duration_ms_p95": 6.124161200000503,
-        "frame_duration_ms_p99": 11.206754599995476
+        "frame_duration_ms_count": 12,
+        "frame_duration_ms_min": 0.2745990000000802,
+        "frame_duration_ms_max": 14.55367299999989,
+        "frame_duration_ms_avg": 3.2841900000000046,
+        "frame_duration_ms_p50": 1.7324149999999463,
+        "frame_duration_ms_p95": 12.127554800000027,
+        "frame_duration_ms_p99": 14.06844935999992
       },
       "exampleFiles": [
         "bootstrap.sh",
@@ -844,6 +844,25 @@
         "hook_duration_ms_p95": 1,
         "hook_duration_ms_p99": 1
       }
+    },
+    "/home/p/Work/unified": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": true,
+      "projectOnboardingSeenCount": 0,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [
+        "AdminApplication.java",
+        "i18n.ts",
+        "Application.java",
+        "view-tournaments.component.ts",
+        "TournamentService.java"
+      ],
+      "exampleFilesGeneratedAt": 1772559576320
     }
   },
   "hasShownOpus46Notice": {

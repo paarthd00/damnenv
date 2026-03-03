@@ -23,7 +23,7 @@ EOF
 
 require_theme_assets() {
   chosen="$1"
-  for rel in alacritty.toml tmux.conf nvim-theme.lua; do
+  for rel in alacritty.toml tmux.conf nvim-theme.lua sway-colors.conf waybar-colors.css wofi-colors.css; do
     if [ ! -f "$THEMES_DIR/$chosen/$rel" ]; then
       log "error: missing theme asset: $THEMES_DIR/$chosen/$rel"
       exit 1
@@ -219,6 +219,16 @@ if [ -f "$HOME_DIR/.config/alacritty/alacritty.toml" ] \
 fi
 link_path "$DOTFILES_DIR/themes/$THEME/tmux.conf" "$HOME_DIR/.tmux-theme.conf"
 link_path "$DOTFILES_DIR/themes/$THEME/nvim-theme.lua" "$HOME_DIR/.config/nvim/lua/paarth/theme.lua"
+link_path "$DOTFILES_DIR/themes/$THEME/sway-colors.conf" "$HOME_DIR/.config/sway/colors.conf"
+cat "$DOTFILES_DIR/themes/$THEME/waybar-colors.css" "$DOTFILES_DIR/waybar/style-base.css" \
+  > "$HOME_DIR/.config/waybar/style.css"
+log "generated: $HOME_DIR/.config/waybar/style.css (theme: $THEME)"
+cat "$DOTFILES_DIR/themes/$THEME/wofi-colors.css" "$DOTFILES_DIR/.config/wofi/style-base.css" \
+  > "$HOME_DIR/.config/wofi/style.css"
+log "generated: $HOME_DIR/.config/wofi/style.css (theme: $THEME)"
+if swaymsg reload >/dev/null 2>&1; then
+  log "sway config reloaded."
+fi
 
 # Write COLORFGBG so TUI apps (codex etc.) detect dark/light correctly
 if is_light_theme "$THEME"; then
