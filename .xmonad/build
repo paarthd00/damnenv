@@ -1,0 +1,3 @@
+#!/bin/sh
+# Use the system GHC (which has xmonad-contrib) instead of GHCup's GHC
+exec /usr/bin/ghc "$@"

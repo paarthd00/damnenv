@@ -1,0 +1,28 @@
+#custom-quicksettings {
+  margin: 3px 6px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: rgba(29, 59, 83, 0.28);
+  font-weight: 600;
+}
+
+#custom-quicksettings:hover {
+  background: rgba(29, 59, 83, 0.52);
+}
+
+menu {
+  border: 1px solid #1d3b53;
+  border-radius: 12px;
+  background: #011627;
+  color: #d6deeb;
+  padding: 6px;
+}
+
+menuitem {
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+menuitem:hover {
+  background: #1d3b53;
+}

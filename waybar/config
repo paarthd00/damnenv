@@ -1,0 +1,43 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 26,
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": [],
+    "modules-right": ["custom/quicksettings", "battery", "clock"],
+
+    "sway/workspaces": {
+        "disable-scroll": true
+    },
+
+    "custom/quicksettings": {
+        "exec": "~/.config/sway/scripts/quick-settings.sh status",
+        "return-type": "json",
+        "interval": 5,
+        "menu": "on-click",
+        "menu-file": "~/.config/waybar/quick-settings-menu.xml",
+        "menu-actions": {
+            "wifi_toggle": "~/.config/sway/scripts/quick-settings.sh wifi-toggle",
+            "wifi_settings": "~/.config/sway/scripts/quick-settings.sh open-network-settings",
+            "vpn_toggle": "~/.config/sway/scripts/quick-settings.sh vpn-toggle",
+            "vpn_settings": "~/.config/sway/scripts/quick-settings.sh open-vpn-settings",
+            "bluetooth_toggle": "~/.config/sway/scripts/quick-settings.sh bluetooth-toggle",
+            "bluetooth_settings": "~/.config/sway/scripts/quick-settings.sh open-bluetooth-settings",
+            "audio_toggle": "~/.config/sway/scripts/quick-settings.sh audio-toggle-mute",
+            "audio_settings": "~/.config/sway/scripts/quick-settings.sh open-audio-settings",
+            "power_settings": "~/.config/sway/scripts/quick-settings.sh open-power-settings"
+        },
+        "on-click-right": "~/.config/sway/scripts/quick-settings.sh open-network-settings"
+    },
+
+    "battery": {
+        "format": "BAT {capacity}%",
+        "format-charging": "AC {capacity}%",
+        "format-full": "AC {capacity}%",
+        "interval": 30
+    },
+
+    "clock": {
+        "format": "{:%a %d %b  %H:%M}"
+    }
+}

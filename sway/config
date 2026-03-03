@@ -1,0 +1,115 @@
+### Variables
+set $mod Mod4
+set $terminal ghostty
+set $menu wofi --show drun
+
+### Output
+output * bg #011627 solid_color
+
+### Idle
+exec swayidle -w \
+    timeout 300 'swaylock -f -c 011627' \
+    timeout 600 'swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' \
+    before-sleep 'swaylock -f -c 011627'
+
+### Input
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+}
+
+### Appearance
+default_border none
+default_floating_border none
+gaps inner 6
+
+### Key bindings
+bindsym $mod+Return      exec $terminal
+bindsym Ctrl+Alt+t       exec $terminal
+bindsym $mod+d           exec $menu
+bindsym $mod+Shift+q     kill
+bindsym $mod+Shift+e     exec swaynag -t warning -m 'Exit sway?' -B 'Yes, exit' 'swaymsg exit'
+bindsym $mod+Shift+r     reload
+
+# Brightness (matches xmonad F5/F6 bindings)
+bindsym F5                   exec ~/.local/bin/brightness down
+bindsym F6                   exec ~/.local/bin/brightness up
+bindsym XF86MonBrightnessDown exec ~/.local/bin/brightness down
+bindsym XF86MonBrightnessUp   exec ~/.local/bin/brightness up
+
+# Audio (matches xmonad bindings)
+bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+# Focus (vim-style + arrows)
+bindsym $mod+h     focus left
+bindsym $mod+j     focus down
+bindsym $mod+k     focus up
+bindsym $mod+l     focus right
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+
+# Move windows
+bindsym $mod+Shift+h     move left
+bindsym $mod+Shift+j     move down
+bindsym $mod+Shift+k     move up
+bindsym $mod+Shift+l     move right
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+# Layout
+bindsym $mod+b       splith
+bindsym $mod+v       splitv
+bindsym $mod+f       fullscreen
+bindsym $mod+s       layout stacking
+bindsym $mod+w       layout tabbed
+bindsym $mod+e       layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space   focus mode_toggle
+
+# Workspaces
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+
+# Resize
+mode "resize" {
+    bindsym h resize shrink width 20px
+    bindsym j resize grow height 20px
+    bindsym k resize shrink height 20px
+    bindsym l resize grow width 20px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+### Status bar
+bar {
+    swaybar_command waybar
+}
+
+### Autostart
+exec mako

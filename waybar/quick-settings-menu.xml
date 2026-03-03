@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkMenu" id="menu">
+    <child>
+      <object class="GtkMenuItem" id="wifi_toggle">
+        <property name="label">Toggle WiFi</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="wifi_settings">
+        <property name="label">WiFi Settings</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="sep_wifi"/>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="vpn_toggle">
+        <property name="label">Toggle VPN</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="vpn_settings">
+        <property name="label">VPN Settings</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="sep_vpn"/>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="bluetooth_toggle">
+        <property name="label">Toggle Bluetooth</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="bluetooth_settings">
+        <property name="label">Bluetooth Settings</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="sep_bluetooth"/>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="audio_toggle">
+        <property name="label">Toggle Mute</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="audio_settings">
+        <property name="label">Audio Settings</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="sep_audio"/>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="power_settings">
+        <property name="label">Power Settings</property>
+      </object>
+    </child>
+  </object>
+</interface>

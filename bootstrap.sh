@@ -193,6 +193,8 @@ if [ "$THEME_ONLY" -eq 0 ]; then
   link_path "$DOTFILES_DIR/.p10k.zsh" "$HOME_DIR/.p10k.zsh"
   link_path "$DOTFILES_DIR/.config/alacritty" "$HOME_DIR/.config/alacritty"
   link_path "$DOTFILES_DIR/.config/nvim" "$HOME_DIR/.config/nvim"
+  link_path "$DOTFILES_DIR/sway" "$HOME_DIR/.config/sway"
+  link_path "$DOTFILES_DIR/waybar" "$HOME_DIR/.config/waybar"
   link_path "$DOTFILES_DIR/.tmux.conf" "$HOME_DIR/.tmux.conf"
 
   # Optional XMonad config
