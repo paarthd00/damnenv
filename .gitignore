@@ -9,3 +9,5 @@ dist-newstyle
 sway/colors.conf
 waybar/style.css
 .config/wofi/style.css
+claude/
+codex/
