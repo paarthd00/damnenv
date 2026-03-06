@@ -27,7 +27,7 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-source $HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source "$HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
 
 # ───────────────────────────────────────────────────────────────────
 #  PATH
@@ -75,6 +75,7 @@ alias zed='flatpak run dev.zed.Zed'
 alias code='flatpak run com.visualstudio.code'
 alias dce='docker exec -it $(docker ps --filter "label=devcontainer.local_folder=$(pwd)" -q) bash'
 alias dcup='devcontainer up --workspace-folder . --remove-existing-container --log-level info'
+alias dcupnc='devcontainer up --workspace-folder . --remove-existing-container --build-no-cache --log-level info'
 alias dcr='docker rm -f $(docker ps -aq)'
 alias dcvr='docker volume rm $(docker volume ls -q)'
 alias settings='python3 ~/.settings.py'
@@ -172,5 +173,3 @@ fpath+=${ZDOTDIR:-~}/.zsh_functions
 [ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
 
 
-alias dce='docker exec -it $(docker ps --filter "label=devcontainer.local_folder=$(pwd)" -q) bash'
-alias dcup='devcontainer up --workspace-folder . --remove-existing-container --log-level info'
