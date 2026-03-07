@@ -108,7 +108,7 @@ check_deps() {
     wm=""
     has_sway   && wm="sway"
     has_xmonad && wm="${wm:+$wm, }xmonad"
-    log "  ok: window manager ($wm)"
+    log "  ok: window manager theme($wm)"
   else
     log "  warn: Neither Sway nor XMonad detected. https://swaywm.org | https://xmonad.org"
   fi

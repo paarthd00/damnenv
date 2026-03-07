@@ -1,9 +1,9 @@
-@define-color bg     #011627;
-@define-color bg_bar rgba(1, 22, 39, 0.95);
-@define-color bg2    #0b253a;
-@define-color border #1d3b53;
-@define-color fg     #d6deeb;
-@define-color fg_dim #9fb3c8;
+@define-color bg     #191724;
+@define-color bg_bar rgba(25, 23, 36, 0.95);
+@define-color bg2    #26233a;
+@define-color border #403d52;
+@define-color fg     #e0def4;
+@define-color fg_dim #908caa;
 * {
   border: none;
   border-radius: 0;

@@ -1,1 +1,1 @@
-../../../../../themes/night-owl/nvim-theme.lua
+../../../../../themes/rose-pine/nvim-theme.lua

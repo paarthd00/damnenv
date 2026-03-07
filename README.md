@@ -35,8 +35,8 @@ The bootstrap will detect missing tools and offer to install `ripgrep` automatic
 ## Quick start
 
 ```sh
-git clone git@github.com:paarthd00/dotfiles.git ~/WindowManger
-cd ~/WindowManger
+git clone git@github.com:paarthd00/dotfiles.git ~/WM-Theme
+cd ~/WM-Theme
 ./bootstrap.sh
 ```
 
