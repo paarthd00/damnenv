@@ -1,0 +1,16 @@
+Config
+  { font     = "xft:Fira Code:size=11:antialias=true"
+  , bgColor  = "#191724"
+  , fgColor  = "#e0def4"
+  , position = TopSize L 100 26
+  , border   = NoBorder
+  , commands =
+      [ Run UnsafeXPropertyLog "_XMONAD_LOG"
+      , Run Com "sh"
+          [ "-c"
+          , "cap=$(cat /sys/class/power_supply/BAT0/capacity); status=$(cat /sys/class/power_supply/BAT0/status); if [ \"$status\" = \"Charging\" ] || [ \"$status\" = \"Full\" ]; then echo \"AC ${cap}%\"; else echo \"BAT ${cap}%\"; fi"
+          ] "battery" 50
+      , Run Date "<fc=#9ccfd8>%a %d %b</fc>  <fc=#c4a7e7>%H:%M</fc>" "date" 50
+      ]
+  , template = "  %_XMONAD_LOG%  }{ %battery%  %date%  "
+  }

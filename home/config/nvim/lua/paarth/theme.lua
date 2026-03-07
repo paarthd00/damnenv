@@ -1,0 +1,1 @@
+../../../../../themes/night-owl/nvim-theme.lua

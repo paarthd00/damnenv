@@ -1,0 +1,76 @@
+@define-color bg     #011627;
+@define-color bg_bar rgba(1, 22, 39, 0.95);
+@define-color bg2    #0b253a;
+@define-color border #1d3b53;
+@define-color fg     #d6deeb;
+@define-color fg_dim #9fb3c8;
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  font-size: 13px;
+}
+
+window#waybar {
+  background: @bg_bar;
+  color: @fg;
+  border-bottom: 1px solid @border;
+}
+
+#workspaces button {
+  margin: 3px 3px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: @fg_dim;
+  background: transparent;
+}
+
+#workspaces button:hover {
+  background: @bg2;
+  color: @fg;
+}
+
+#workspaces button.focused {
+  background: @border;
+  color: @fg;
+}
+
+#mode,
+#custom-quicksettings,
+#battery,
+#clock {
+  margin: 3px 5px;
+  padding: 0 10px;
+  min-height: 0;
+  border-radius: 8px;
+  background: @bg2;
+  color: @fg;
+}
+
+#custom-quicksettings {
+  font-weight: 700;
+}
+
+#custom-quicksettings:hover,
+#battery:hover,
+#clock:hover,
+#mode:hover {
+  background: @border;
+}
+
+menu {
+  border: 1px solid @border;
+  border-radius: 12px;
+  background: @bg;
+  color: @fg;
+  padding: 6px;
+}
+
+menuitem {
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+menuitem:hover {
+  background: @border;
+}

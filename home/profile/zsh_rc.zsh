@@ -32,8 +32,6 @@ source "$HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin
 # ───────────────────────────────────────────────────────────────────
 #  PATH
 # ───────────────────────────────────────────────────────────────────
-typeset -U PATH  # Automatically remove duplicates
-
 path=(
   $HOME/.local/bin
   $HOME/.rbenv/bin
@@ -55,30 +53,42 @@ path=(
   $path
 )
 
+# Deduplicate and remove non-existent directories
+typeset -U path
+path=($^path(N-/))
+
 # ───────────────────────────────────────────────────────────────────
 #  Aliases
 # ───────────────────────────────────────────────────────────────────
-alias v="nvim"
-alias vim="nvim"
-alias zshconfig="nvim ~/.zshrc"
-alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
-alias activator='./activator -Djline.terminal=jline.UnsupportedTerminal'
-# Better ls (prefer exa > colorls > ls)
+command -v nvim        &>/dev/null && alias v='nvim' && alias vim='nvim' && alias zshconfig='nvim ~/.zshrc'
+command -v npm         &>/dev/null && alias h2='$(npm prefix -s)/node_modules/.bin/shopify hydrogen'
+command -v python3     &>/dev/null && alias settings='python3 ~/.settings.py'
+
+# ls — use best available
 if command -v exa &>/dev/null; then
-  alias ls="exa"
-  alias la="exa --long --all --group"
+  alias ls='exa'
+  alias la='exa --long --all --group'
 elif command -v colorls &>/dev/null; then
-  alias ls="colorls"
-  alias la="colorls -al"
+  alias ls='colorls'
+  alias la='colorls -al'
 fi
-alias zed='flatpak run dev.zed.Zed'
-alias code='flatpak run com.visualstudio.code'
-alias dce='docker exec -it $(docker ps --filter "label=devcontainer.local_folder=$(pwd)" -q) bash'
-alias dcup='devcontainer up --workspace-folder . --remove-existing-container --log-level info'
-alias dcupnc='devcontainer up --workspace-folder . --remove-existing-container --build-no-cache --log-level info'
-alias dcr='docker rm -f $(docker ps -aq)'
-alias dcvr='docker volume rm $(docker volume ls -q)'
-alias settings='python3 ~/.settings.py'
+
+# Flatpak apps
+command -v flatpak &>/dev/null && {
+  alias zed='flatpak run dev.zed.Zed'
+  alias code='flatpak run com.visualstudio.code'
+}
+
+# Docker / devcontainer
+command -v docker &>/dev/null && {
+  alias dce='docker exec -it $(docker ps --filter "label=devcontainer.local_folder=$(pwd)" -q) bash'
+  alias dcr='docker rm -f $(docker ps -aq)'
+  alias dcvr='docker volume rm $(docker volume ls -q)'
+}
+command -v devcontainer &>/dev/null && {
+  alias dcup='devcontainer up --workspace-folder . --remove-existing-container --log-level info'
+  alias dcupnc='devcontainer up --workspace-folder . --remove-existing-container --build-no-cache --log-level info'
+}
 
 # ───────────────────────────────────────────────────────────────────
 #  FZF
@@ -173,3 +183,10 @@ fpath+=${ZDOTDIR:-~}/.zsh_functions
 [ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
 
 
+
+# bun completions
+[ -s "/home/p/.bun/_bun" ] && source "/home/p/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

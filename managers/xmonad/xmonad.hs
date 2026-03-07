@@ -5,19 +5,21 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.ManageDocks
 import qualified XMonad.StackSet as W
 
+import Colors
+
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate'
             . W.stack . W.workspace . W.current . windowset
 
 myXmobarPP :: PP
 myXmobarPP = def
-    { ppCurrent         = xmobarColor "#61afef" "" . wrap "[" "]"
-    , ppVisible         = xmobarColor "#98c379" "" . wrap "(" ")"
-    , ppHidden          = xmobarColor "#abb2bf" ""
-    , ppHiddenNoWindows = xmobarColor "#4b5263" ""
-    , ppTitle           = xmobarColor "#e5c07b" "" . shorten 60
+    { ppCurrent         = xmobarColor colorCurrent     "" . wrap "[" "]"
+    , ppVisible         = xmobarColor colorVisible     "" . wrap "(" ")"
+    , ppHidden          = xmobarColor colorHidden      ""
+    , ppHiddenNoWindows = xmobarColor colorHiddenNoWin ""
+    , ppTitle           = xmobarColor colorTitle       "" . shorten 60
     , ppSep             = "  |  "
-    , ppLayout          = xmobarColor "#c678dd" ""
+    , ppLayout          = xmobarColor colorLayout      ""
     , ppExtras          = [windowCount]
     , ppOrder           = \(ws:l:t:ex) -> [ws, l] ++ ex ++ [t]
     }
@@ -25,7 +27,7 @@ myXmobarPP = def
 main :: IO ()
 main = xmonad
      . docks
-     . withEasySB (statusBarProp "xmobar ~/.xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
+     . withEasySB (statusBarProp "xmobar ~/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
      $ def
         { terminal = "alacritty"
         , modMask  = mod4Mask

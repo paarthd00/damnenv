@@ -1,0 +1,59 @@
+@define-color bg     #011627;
+@define-color bg2    #0b253a;
+@define-color border #1d3b53;
+@define-color fg     #d6deeb;
+@define-color fg_dim #9fb3c8;
+* {
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  font-size: 15px;
+}
+
+window {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid @border;
+  border-radius: 14px;
+  background: @bg;
+  color: @fg;
+}
+
+#input {
+  margin: 6px;
+  padding: 10px 12px;
+  border: 1px solid @border;
+  border-radius: 10px;
+  background: @bg2;
+  color: @fg;
+}
+
+#inner-box {
+  margin: 6px;
+  border: none;
+  background: transparent;
+}
+
+#outer-box {
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+#scroll {
+  margin: 0;
+  border: none;
+}
+
+#entry {
+  margin: 2px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: transparent;
+}
+
+#entry:selected {
+  background: @border;
+}
+
+#text:selected {
+  color: @fg;
+}
