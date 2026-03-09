@@ -1,8 +1,8 @@
-@define-color bg     #191724;
-@define-color bg2    #26233a;
-@define-color border #403d52;
-@define-color fg     #e0def4;
-@define-color fg_dim #908caa;
+@define-color bg     #000000;
+@define-color bg2    #0d0d0d;
+@define-color border #1f1f1f;
+@define-color fg     #d6deeb;
+@define-color fg_dim #9fb3c8;
 * {
   font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
   font-size: 15px;
