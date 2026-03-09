@@ -66,6 +66,7 @@ All themes are fully tested with Sway, XMonad, Neovim, Alacritty, tmux, waybar, 
 | Theme | Style |
 |-------|-------|
 | `night-owl` | Dark — blue/teal, default |
+| `pitch-black` | Dark — true black background, high contrast |
 | `rose-pine` | Dark — muted purple/rose |
 | `rose-pine-light` | Light — warm parchment |
 | `tokyo-night` | Dark — deep blue/purple |
