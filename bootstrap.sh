@@ -37,6 +37,62 @@ has_sway()  { has_cmd sway || [ -d "$HOME_DIR/.config/sway" ]; }
 has_xmonad(){ has_cmd xmonad || [ -f "$HOME_DIR/.xmonad/xmonad.hs" ]; }
 has_omz()   { [ -d "$OMZ_DIR" ]; }
 has_omz_plugin() { [ -d "$ZSH_CUSTOM/plugins/$1" ]; }
+has_alacritty() { has_cmd alacritty || [ -d "/Applications/Alacritty.app" ] || [ -d "$HOME_DIR/Applications/Alacritty.app" ]; }
+has_ghostty() { has_cmd ghostty || [ -d "/Applications/Ghostty.app" ] || [ -d "$HOME_DIR/Applications/Ghostty.app" ]; }
+is_macos() { [ "$(uname -s)" = "Darwin" ]; }
+has_brew() { command -v brew >/dev/null 2>&1; }
+has_fira_code() {
+  if is_macos; then
+    for dir in "$HOME_DIR/Library/Fonts" "/Library/Fonts" "/System/Library/Fonts"; do
+      [ -d "$dir" ] || continue
+      find "$dir" -maxdepth 1 \( -iname '*Fira*Code*' -o -iname 'FiraCode*' \) -print -quit 2>/dev/null | grep -q .
+      if [ "$?" -eq 0 ]; then
+        return 0
+      fi
+    done
+    return 1
+  fi
+
+  if has_cmd fc-list; then
+    fc-list | grep -iq 'Fira Code'
+    return "$?"
+  fi
+
+  return 1
+}
+
+print_install_hint() {
+  pkg="$1"
+  cask="${2:-0}"
+
+  if is_macos; then
+    if has_brew; then
+      if [ "$cask" -eq 1 ]; then
+        log "  hint: install with 'brew install --cask $pkg'"
+      else
+        log "  hint: install with 'brew install $pkg'"
+      fi
+    else
+      log "  hint: Homebrew not found. Install it from https://brew.sh and then run:"
+      if [ "$cask" -eq 1 ]; then
+        log "        brew install --cask $pkg"
+      else
+        log "        brew install $pkg"
+      fi
+    fi
+    return 0
+  fi
+
+  if has_cmd apt-get; then
+    log "  hint: install with 'sudo apt-get install -y $pkg'"
+  elif has_cmd dnf; then
+    log "  hint: install with 'sudo dnf install -y $pkg'"
+  elif has_cmd pacman; then
+    log "  hint: install with 'sudo pacman -S --needed $pkg'"
+  elif has_cmd zypper; then
+    log "  hint: install with 'sudo zypper install -y $pkg'"
+  fi
+}
 
 wm_is_running() { pgrep -x "$1" >/dev/null 2>&1; }
 is_light_theme() { case "$1" in *light*) return 0 ;; *) return 1 ;; esac; }
@@ -62,6 +118,7 @@ link_path() {
   src="$1"
   dst="$2"
   dst_dir="$(dirname "$dst")"
+  dst_dir_real=""
   rel_src=""
 
   [ -e "$src" ] || { log "  skip (missing): $src"; return 0; }
@@ -70,10 +127,15 @@ link_path() {
   [ "$src" -ef "$dst" ] && { log "  ok: $dst"; return 0; }
 
   mkdir -p "$dst_dir"
+  dst_dir_real="$(CDPATH= cd -- "$dst_dir" && pwd -P)"
   [ -L "$dst" ] || [ -e "$dst" ] && rm -f "$dst"
 
   # Relative symlink — survives dotfiles dir being moved
-  rel_src="$(realpath --relative-to="$dst_dir" "$src")"
+  if realpath --relative-to="$dst_dir_real" "$src" >/dev/null 2>&1; then
+    rel_src="$(realpath --relative-to="$dst_dir_real" "$src")"
+  else
+    rel_src="$(LC_ALL=C perl -e 'use File::Spec; print File::Spec->abs2rel($ARGV[0], $ARGV[1])' "$src" "$dst_dir_real")"
+  fi
   ln -s "$rel_src" "$dst"
   log "  linked: $dst -> $rel_src"
 }
@@ -90,18 +152,41 @@ check_deps() {
     fi
   done
 
-  has_cmd rg    || log "  warn: 'ripgrep' not found — needed for Neovim live grep. https://github.com/BurntSushi/ripgrep#installation"
-  has_cmd nvim  || log "  warn: 'nvim' not found. https://neovim.io"
+  if ! has_cmd rg; then
+    log "  warn: 'ripgrep' not found — needed for Neovim live grep. https://github.com/BurntSushi/ripgrep#installation"
+    print_install_hint ripgrep
+  fi
+  if ! has_cmd nvim; then
+    log "  warn: 'nvim' not found. https://neovim.io"
+    print_install_hint neovim
+  fi
+  if ! has_fira_code; then
+    log "  warn: 'Fira Code' font not found. Alacritty config expects it."
+    if is_macos; then
+      if has_brew; then
+        log "  hint: install with 'brew install --cask font-fira-code'"
+      else
+        log "  hint: install Homebrew from https://brew.sh and then run:"
+        log "        brew install --cask font-fira-code"
+      fi
+    elif has_cmd fc-list; then
+      log "  hint: install the Fira Code font package for your distro"
+    fi
+  fi
   has_cmd zsh   || log "  info: 'zsh' not found — zsh dotfiles will be skipped."
   has_cmd tmux  || log "  info: 'tmux' not found — tmux dotfiles will be skipped."
+  if ! has_cmd tmux; then
+    print_install_hint tmux
+  fi
 
-  if has_cmd alacritty || has_cmd ghostty; then
+  if has_alacritty || has_ghostty; then
     term=""
-    has_cmd alacritty && term="alacritty"
-    has_cmd ghostty   && term="${term:+$term, }ghostty"
+    has_alacritty && term="alacritty"
+    has_ghostty   && term="${term:+$term, }ghostty"
     log "  ok: terminal ($term)"
   else
     log "  warn: Neither 'alacritty' nor 'ghostty' found. https://alacritty.org | https://ghostty.org"
+    print_install_hint alacritty 1
   fi
 
   if has_sway || has_xmonad; then
@@ -115,6 +200,28 @@ check_deps() {
 
   log "────────────────────────────────────────────────────────────────"
   log ""
+}
+
+# ── Optional installs ────────────────────────────────────────────────
+
+ensure_p10k() {
+  [ -d "$OMZ_DIR" ] || return 0
+  [ -d "$ZSH_CUSTOM" ] || return 0
+  [ -d "$ZSH_CUSTOM/themes/powerlevel10k" ] && return 0
+  if has_cmd git; then
+    log "  installing: powerlevel10k (oh-my-zsh theme)"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k "$ZSH_CUSTOM/themes/powerlevel10k" >/dev/null 2>&1 \
+      && log "  ok: powerlevel10k installed" \
+      || log "  warn: failed to install powerlevel10k"
+  fi
+}
+
+ensure_alacritty_dir() {
+  mkdir -p "$HOME_DIR/.config"
+  if [ -L "$HOME_DIR/.config/alacritty" ] && is_macos; then
+    rm -f "$HOME_DIR/.config/alacritty"
+  fi
+  mkdir -p "$HOME_DIR/.config/alacritty"
 }
 
 # ── Theme ─────────────────────────────────────────────────────────────
@@ -136,7 +243,18 @@ choose_theme() {
   fi
 
   log "Select a theme:"
-  choices="$(find "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)"
+  choices=""
+  for d in "$THEMES_DIR"/*; do
+    [ -d "$d" ] || continue
+    name="$(basename "$d")"
+    choices="${choices}
+${name}"
+  done
+  choices="$(printf '%s\n' "$choices" | sed '/^$/d' | sort)"
+  if [ -z "$choices" ]; then
+    log "error: no themes found in $THEMES_DIR"
+    exit 1
+  fi
   idx=1; default_idx=1
   for name in $choices; do
     [ "$name" = "night-owl" ] && default_idx="$idx"
@@ -216,6 +334,7 @@ if [ "$THEME_ONLY" -eq 0 ]; then
 
   # Zsh — only if installed
   if has_cmd zsh; then
+    ensure_p10k
     link_path "$DOTFILES_DIR/home/profile/zsh_rc.zsh"      "$HOME_DIR/.zshrc"
     link_path "$DOTFILES_DIR/home/profile/zsh_profile.zsh" "$HOME_DIR/.zprofile"
     link_path "$DOTFILES_DIR/home/profile/zsh_env.zsh"     "$HOME_DIR/.zshenv"
@@ -225,8 +344,14 @@ if [ "$THEME_ONLY" -eq 0 ]; then
   fi
 
   # Alacritty — only if installed
-  if has_cmd alacritty; then
-    link_path "$DOTFILES_DIR/home/config/alacritty" "$HOME_DIR/.config/alacritty"
+  if has_alacritty; then
+    if is_macos; then
+      ensure_alacritty_dir
+      link_path "$DOTFILES_DIR/home/config/alacritty/alacritty.toml" "$HOME_DIR/.config/alacritty/alacritty.toml"
+    else
+      mkdir -p "$HOME_DIR/.config"
+      link_path "$DOTFILES_DIR/home/config/alacritty" "$HOME_DIR/.config/alacritty"
+    fi
   else
     log "  skip: alacritty config (not installed)"
   fi
@@ -268,25 +393,35 @@ fi
 log "── Applying theme: $THEME ──────────────────────────────────────"
 
 # Alacritty theme
-if has_cmd alacritty; then
-  link_path "$DOTFILES_DIR/themes/$THEME/alacritty.toml" "$HOME_DIR/.config/alacritty/theme.toml"
-  mkdir -p "$HOME_DIR/.config/alacritty"
+if has_alacritty; then
+  ensure_alacritty_dir
+  [ -L "$HOME_DIR/.config/alacritty/theme.toml" ] && rm -f "$HOME_DIR/.config/alacritty/theme.toml"
+  if is_macos; then
+    # On macOS, prefer a real file to ensure FSEvents reloads immediately
+    cp "$DOTFILES_DIR/themes/$THEME/alacritty.toml" "$HOME_DIR/.config/alacritty/theme.toml"
+    log "  copied: alacritty theme (macOS refresh)"
+  else
+    link_path "$DOTFILES_DIR/themes/$THEME/alacritty.toml" "$HOME_DIR/.config/alacritty/theme.toml"
+  fi
   if [ ! -f "$HOME_DIR/.config/alacritty/alacritty.toml" ]; then
     printf 'import = ["~/.config/alacritty/theme.toml"]\n' > "$HOME_DIR/.config/alacritty/alacritty.toml"
     log "  created: alacritty.toml with theme import"
   elif ! grep -q 'theme.toml' "$HOME_DIR/.config/alacritty/alacritty.toml"; then
-    log "  warn: alacritty.toml does not import theme.toml"
+    printf '\n# Theme (set by bootstrap.sh)\nimport = ["~/.config/alacritty/theme.toml"]\n' >> "$HOME_DIR/.config/alacritty/alacritty.toml"
+    log "  patched: alacritty.toml (added theme import)"
   else
     # Touch the main config to trigger alacritty's inotify watcher (symlink re-targeting doesn't fire it)
     touch "$HOME_DIR/.config/alacritty/alacritty.toml"
     log "  alacritty config touched (live reload triggered)"
   fi
+  # Ensure the theme file mtime changes so Alacritty reloads immediately on macOS
+  touch "$HOME_DIR/.config/alacritty/theme.toml"
 else
   log "  skip: alacritty theme (not installed)"
 fi
 
 # Ghostty theme
-if has_cmd ghostty; then
+if has_ghostty; then
   mkdir -p "$HOME_DIR/.config/ghostty"
   link_path "$DOTFILES_DIR/themes/$THEME/ghostty.conf" "$HOME_DIR/.config/ghostty/theme"
   ghostty_cfg="$HOME_DIR/.config/ghostty/config"

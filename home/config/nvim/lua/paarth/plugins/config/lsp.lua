@@ -32,39 +32,73 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
-require('which-key').add {
-  { '<leader>c', group = '[C]ode' },
-  { '<leader>d', group = '[D]ocument' },
-  { '<leader>g', group = '[G]it' },
-  { '<leader>h', group = 'More git' },
-  { '<leader>r', group = '[R]ename' },
-  { '<leader>s', group = '[S]earch' },
-  { '<leader>w', group = '[W]orkspace' },
-}
+local wk = require('which-key')
+if wk.add then
+  wk.add {
+    { '<leader>c', group = '[C]ode' },
+    { '<leader>d', group = '[D]ocument' },
+    { '<leader>g', group = '[G]it' },
+    { '<leader>h', group = 'More git' },
+    { '<leader>r', group = '[R]ename' },
+    { '<leader>s', group = '[S]earch' },
+    { '<leader>w', group = '[W]orkspace' },
+  }
+elseif wk.register then
+  wk.register {
+    ['<leader>c'] = { name = '[C]ode' },
+    ['<leader>d'] = { name = '[D]ocument' },
+    ['<leader>g'] = { name = '[G]it' },
+    ['<leader>h'] = { name = 'More git' },
+    ['<leader>r'] = { name = '[R]ename' },
+    ['<leader>s'] = { name = '[S]earch' },
+    ['<leader>w'] = { name = '[W]orkspace' },
+  }
+end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-vim.lsp.config('*', {
-  capabilities = capabilities,
-  on_attach = on_attach,
-})
-
-vim.lsp.config('lua_ls', {
-  settings = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
+local servers = {
+  lua_ls = {
+    settings = {
+      Lua = {
+        workspace = { checkThirdParty = false },
+        telemetry = { enable = false },
+      },
     },
   },
-})
+  html = {
+    filetypes = { 'html', 'php', 'twig', 'hbs' },
+  },
+}
 
-vim.lsp.config('html', {
-  filetypes = { 'html', 'php', 'twig', 'hbs' },
-})
+if vim.lsp.config and vim.lsp.enable then
+  vim.lsp.config('*', {
+    capabilities = capabilities,
+    on_attach = on_attach,
+  })
+
+  for server, config in pairs(servers) do
+    vim.lsp.config(server, config)
+  end
+else
+  local lspconfig = require('lspconfig')
+  for server, config in pairs(servers) do
+    lspconfig[server].setup(vim.tbl_extend('force', {
+      capabilities = capabilities,
+      on_attach = on_attach,
+    }, config))
+  end
+end
 
 require('mason').setup()
 require('mason-lspconfig').setup {
   ensure_installed = { 'clangd', 'phpactor', 'gopls', 'pyright', 'rust_analyzer', 'ts_ls', 'html', 'lua_ls' },
 }
 
-vim.lsp.enable('hls')
+if vim.lsp.enable then
+  vim.lsp.enable('hls')
+else
+  require('lspconfig').hls.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+  }
+end

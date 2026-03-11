@@ -118,26 +118,11 @@ mods = "Control|Shift"
 action = "Copy"
 
 [[keyboard.bindings]]
-key = "Plus"
-mods = "Control"
-action = "IncreaseFontSize"
-
-[[keyboard.bindings]]
-key = "Equals"
-mods = "Control"
-action = "IncreaseFontSize"
-
-[[keyboard.bindings]]
-key = "Minus"
-mods = "Control"
-action = "DecreaseFontSize"
-
-[[keyboard.bindings]]
-key = "Key1"
-mods = "Control"
-action = "ResetFontSize"
+key = "V"
+mods = "Control|Shift"
+action = "Paste"
 
 [[keyboard.bindings]]
 key = "N"
-mods = "Control|Shift"
+mods = "Command"
 action = "SpawnNewInstance"

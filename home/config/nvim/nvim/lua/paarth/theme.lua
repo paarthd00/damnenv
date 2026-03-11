@@ -1,1 +1,0 @@
-/home/p/dotfiles/themes/tokyo-night/nvim-theme.lua

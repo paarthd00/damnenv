@@ -1,1 +1,1 @@
-../../../../../themes/pitch-black/nvim-theme.lua
+../../../../../themes/night-owl/nvim-theme.lua
