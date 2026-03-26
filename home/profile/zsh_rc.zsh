@@ -16,6 +16,18 @@ export EDITOR='zed --wait'
 export VISUAL='zed --wait'
 
 # ───────────────────────────────────────────────────────────────────
+#  History
+# ───────────────────────────────────────────────────────────────────
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt SHARE_HISTORY
+
+# ───────────────────────────────────────────────────────────────────
 #  Nix-Managed Shell Plugins
 # ───────────────────────────────────────────────────────────────────
 fpath+=${ZDOTDIR:-~}/.zsh_functions
