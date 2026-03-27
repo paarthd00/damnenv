@@ -12,27 +12,43 @@ cd ~/rang
 ./bootstrap.sh
 ```
 
-`bootstrap.sh` is now a thin wrapper around Home Manager:
+On a fresh Fedora machine, `bootstrap.sh` will install official single-user Nix automatically if `nix` is missing, then continue with Home Manager.
+
+`bootstrap.sh` then:
 
 1. choose a theme
 2. export `RANG_THEME=<theme>`
-3. run `home-manager switch --impure --flake "path:$PWD#default"`
-4. reload live programs like Sway, tmux, and XMonad when possible
+3. run Home Manager with flake support enabled
+4. optionally remove overlapping Fedora RPM packages with `--remove-fedora-overlap`
+5. reload live programs like Sway, tmux, and XMonad when possible
 
 Bootstrap runs Home Manager with backup mode enabled. Existing conflicting files are moved aside with the extension `.rang-backup` by default.
+
+Before applying, bootstrap also removes legacy repo-managed symlinks from `~/.config/...` and restores repo source files if an older Home Manager run accidentally replaced them with dead Nix store links.
 
 If you want to skip the prompt:
 
 ```sh
 ./bootstrap.sh --theme tokyo-night
 ./bootstrap.sh --yes
+./bootstrap.sh --remove-fedora-overlap
 ```
 
 You can also call Home Manager directly:
 
 ```sh
-RANG_THEME=tokyo-night nix run github:nix-community/home-manager -- switch --impure --flake "path:$PWD#default"
+RANG_THEME=tokyo-night nix --extra-experimental-features "nix-command flakes" run github:nix-community/home-manager -- switch --impure --flake "path:$PWD#default"
 ```
+
+If you install Nix outside `bootstrap.sh` and your current shell still says `nix: command not found`, it has not loaded the Nix profile yet. Either open a new shell or run:
+
+```sh
+. "$HOME/.nix-profile/etc/profile.d/nix.sh"
+```
+
+Then rerun `./bootstrap.sh`.
+
+`--remove-fedora-overlap` is intentionally opt-in. It only targets overlapping user-space RPM packages it can detect locally and deliberately skips the distro `zsh` package until your login shell no longer points at `/usr/bin/zsh`.
 
 ## What Nix Manages
 

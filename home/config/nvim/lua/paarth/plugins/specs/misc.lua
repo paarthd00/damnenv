@@ -1,1 +1,10 @@
-/nix/store/l35s45fcni7xc9bfcm3pws1jqbmxx16s-home-manager-files/.config/nvim/lua/paarth/plugins/specs/misc.lua
+return {
+  'chrisbra/csv.vim',
+  'tpope/vim-sleuth',
+  {
+    'iamcco/markdown-preview.nvim',
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    ft = { 'markdown' },
+    build = function() vim.fn['mkdp#util#install']() end,
+  },
+}

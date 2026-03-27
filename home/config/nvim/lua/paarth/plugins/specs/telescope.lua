@@ -1,1 +1,16 @@
-/nix/store/l35s45fcni7xc9bfcm3pws1jqbmxx16s-home-manager-files/.config/nvim/lua/paarth/plugins/specs/telescope.lua
+return {
+  {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
+        cond = function()
+          return vim.fn.executable 'make' == 1
+        end,
+      },
+    },
+  },
+}

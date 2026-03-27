@@ -1,1 +1,11 @@
-/nix/store/l35s45fcni7xc9bfcm3pws1jqbmxx16s-home-manager-files/.config/nvim/lua/paarth/plugins/specs/cmp.lua
+return {
+  {
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+      'hrsh7th/cmp-nvim-lsp',
+      'rafamadriz/friendly-snippets',
+    },
+  },
+}

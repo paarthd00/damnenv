@@ -1,1 +1,4 @@
-/nix/store/l35s45fcni7xc9bfcm3pws1jqbmxx16s-home-manager-files/.config/nvim/lua/paarth/init.lua
+require("paarth.set")
+require("paarth.plugins")
+require("paarth.autocmds")
+require("paarth.remap")

@@ -1,1 +1,45 @@
-/nix/store/l35s45fcni7xc9bfcm3pws1jqbmxx16s-home-manager-files/.config/nvim/lua/paarth/plugins/specs/ui.lua
+return {
+  'ellisonleao/gruvbox.nvim',
+  {
+    'haishanh/night-owl.vim',
+    lazy = false,
+    priority = 1000,
+  },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+  },
+  {
+    'baliestri/aura-theme',
+    lazy = false,
+    priority = 1000,
+    config = function(plugin)
+      vim.opt.rtp:append(plugin.dir .. '/packages/neovim')
+      vim.cmd([[colorscheme aura-dark]])
+    end,
+  },
+  { 'bluz71/vim-moonfly-colors', name = 'moonfly', lazy = false, priority = 1000 },
+  { 'rose-pine/neovim', name = 'rose-pine' },
+  { 'folke/tokyonight.nvim' },
+  'navarasu/onedark.nvim',
+  { 'nyoom-engineering/oxocarbon.nvim', lazy = false, priority = 1000 },
+  {
+    'nvim-lualine/lualine.nvim',
+    opts = {
+      options = {
+        icons_enabled = false,
+        theme = 'auto',
+        component_separators = '|',
+        section_separators = '',
+      },
+    },
+  },
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    opts = {},
+  },
+  { 'numToStr/Comment.nvim', opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
+}
