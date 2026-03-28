@@ -272,17 +272,6 @@ migrate_legacy_links() {
   done
 }
 
-apply_home_manager() {
-  export RANG_THEME="$THEME"
-
-  if has_cmd home-manager; then
-    home-manager switch -b "$BACKUP_EXT" --impure --flake "path:$DOTFILES_DIR#default"
-    return 0
-  fi
-
-  nix run github:nix-community/home-manager -- switch -b "$BACKUP_EXT" --impure --flake "path:$DOTFILES_DIR#default"
-}
-
 find_fedora_binary() {
   cmd="$1"
   search_path="/usr/bin:/usr/sbin:/bin:/sbin:$PATH"

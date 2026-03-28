@@ -1,1 +1,10 @@
-/nix/store/l35s45fcni7xc9bfcm3pws1jqbmxx16s-home-manager-files/.config/nvim/lua/paarth/plugins/specs/treesitter.lua
+return {
+  {
+    'nvim-treesitter/nvim-treesitter',
+    lazy = false,
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
+    build = ':TSUpdate',
+  },
+}
