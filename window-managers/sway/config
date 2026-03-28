@@ -1,4 +1,4 @@
-### Theme managed by rang
+### Theme managed by damnenv
 include ~/.config/sway/colors.conf
 
 ### Output layout (managed by nwg-displays)

@@ -1,14 +1,14 @@
-# rang
+# damnenv
 
-`rang` means color in Farsi. This repo is a Nix-first desktop and editor setup with shared theming for Sway, XMonad, Neovim, tmux, Alacritty, Ghostty, Wofi, and Waybar.
+`damnenv` is a Nix-first desktop and editor setup with shared theming for Sway, XMonad, Neovim, tmux, Alacritty, Ghostty, Wofi, and Waybar.
 
 ## Quick Start
 
-Clone it wherever you want. Using `~/rang` keeps the naming consistent:
+Clone it wherever you want. Using `~/damnenv` keeps the naming consistent:
 
 ```sh
-git clone git@github.com:paarthd00/dotfiles.git ~/rang
-cd ~/rang
+git clone git@github.com:paarthd00/dotfiles.git ~/damnenv
+cd ~/damnenv
 ./bootstrap.sh
 ```
 
@@ -17,12 +17,12 @@ On a fresh Fedora machine, `bootstrap.sh` will install official single-user Nix 
 `bootstrap.sh` then:
 
 1. choose a theme
-2. export `RANG_THEME=<theme>`
+2. export `DAMNENV_THEME=<theme>`
 3. run Home Manager with flake support enabled
 4. optionally remove overlapping Fedora RPM packages with `--remove-fedora-overlap`
 5. reload live programs like Sway, tmux, and XMonad when possible
 
-Bootstrap runs Home Manager with backup mode enabled. Existing conflicting files are moved aside with the extension `.rang-backup` by default.
+Bootstrap runs Home Manager with backup mode enabled. Existing conflicting files are moved aside with the extension `.damnenv-backup` by default.
 
 Before applying, bootstrap also removes legacy repo-managed symlinks from `~/.config/...` and restores repo source files if an older Home Manager run accidentally replaced them with dead Nix store links.
 
@@ -37,8 +37,7 @@ If you want to skip the prompt:
 You can also call Home Manager directly:
 
 ```sh
-
-RANG_THEME=tokyo-night nix --extra-experimental-features "nix-command flakes" run github:nix-community/home-manager -- switch --impure --flake "path:$PWD#default"
+DAMNENV_THEME=tokyo-night nix --extra-experimental-features "nix-command flakes" run github:nix-community/home-manager -- switch --impure --flake "path:$PWD#default"
 ```
 
 If you install Nix outside `bootstrap.sh` and your current shell still says `nix: command not found`, it has not loaded the Nix profile yet. Either open a new shell or run:
@@ -53,7 +52,7 @@ Then rerun `./bootstrap.sh`.
 
 ## What Nix Manages
 
-The Home Manager module lives at `nix/modules/rang.nix`. It manages:
+The Home Manager module lives at `nix/modules/damnenv.nix`. It manages:
 
 - packages from `nix/package-set.nix`
 - `home/profile/zsh_*`
@@ -74,7 +73,7 @@ Package groups in `nix/package-set.nix`:
 - `aiCli` for Claude Code, Codex, and Opencode
 - `sway`, `xmonad`, and `fonts` for WM/runtime dependencies
 
-The flake also exposes a package bundle as `.#rang` and `.#rang-packages` if you want the tool bundle without the full Home Manager setup.
+The flake also exposes a package bundle as `.#damnenv` and `.#damnenv-packages` if you want the tool bundle without the full Home Manager setup.
 
 Fedora note:
 
@@ -87,8 +86,8 @@ Fedora note:
 The flake default theme is `night-owl`. The active theme can be set in either of these ways:
 
 - run `./bootstrap.sh --theme tokyo-night`
-- set `RANG_THEME=tokyo-night` before `home-manager switch`
-- hardcode `rang.theme = "tokyo-night";` in `flake.nix`
+- set `DAMNENV_THEME=tokyo-night` before `home-manager switch`
+- hardcode `damnenv.theme = "tokyo-night";` in `flake.nix`
 
 Available theme values:
 

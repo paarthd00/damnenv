@@ -8,5 +8,5 @@ scrollback-limit = 50001
 mouse-hide-while-typing = true
 copy-on-select = clipboard
 
-# Theme managed by rang
+# Theme managed by damnenv
 config-file = ~/.config/ghostty/theme

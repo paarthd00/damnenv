@@ -1,0 +1,43 @@
+{
+  "background":   "#1a1b26",
+  "foreground":   "#c0caf5",
+  "cursor":       "#c0caf5",
+  "cursor_text":  "#1a1b26",
+  "selection_bg": "#33467c",
+  "bg2":          "#24283b",
+  "border":       "#33467c",
+  "fg_dim":       "#565f89",
+  "accent":       "#7aa2f7",
+  "normal": {
+    "black":   "#1a1b26",
+    "red":     "#f7768e",
+    "green":   "#9ece6a",
+    "yellow":  "#e0af68",
+    "blue":    "#7aa2f7",
+    "magenta": "#bb9af7",
+    "cyan":    "#7dcfff",
+    "white":   "#c0caf5"
+  },
+  "bright": {
+    "black":   "#414868",
+    "red":     "#f7768e",
+    "green":   "#9ece6a",
+    "yellow":  "#e0af68",
+    "blue":    "#7aa2f7",
+    "magenta": "#bb9af7",
+    "cyan":    "#7dcfff",
+    "white":   "#c0caf5"
+  },
+  "xmonad": {
+    "current":      "#7aa2f7",
+    "visible":      "#9ece6a",
+    "hidden":       "#7dcfff",
+    "hidden_no_win":"#565f89",
+    "title":        "#e0af68",
+    "layout":       "#bb9af7"
+  },
+  "nvim": {
+    "colorscheme": "tokyonight-night",
+    "transparent": true
+  }
+}

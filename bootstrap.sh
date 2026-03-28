@@ -7,7 +7,7 @@ THEMES_DIR="$DOTFILES_DIR/themes"
 
 THEME="${THEME:-}"
 ASSUME_YES=0
-BACKUP_EXT="${RANG_BACKUP_EXT:-rang-backup}"
+BACKUP_EXT="${DAMNENV_BACKUP_EXT:-${RANG_BACKUP_EXT:-damnenv-backup}}"
 NIX_EXPERIMENTAL_FEATURES="nix-command flakes"
 REMOVE_FEDORA_OVERLAP=0
 
@@ -17,7 +17,8 @@ wm_is_running() { pgrep -x "$1" >/dev/null 2>&1; }
 
 restore_repo_file_from_backup() {
   path="$1"
-  backup="$path.$BACKUP_EXT"
+  backup_ext="$2"
+  backup="$path.$backup_ext"
 
   [ -L "$path" ] || return 0
   [ -f "$backup" ] || return 0
@@ -32,6 +33,11 @@ restore_repo_file_from_backup() {
   esac
 }
 
+backup_exts() {
+  printf '%s\n' "$BACKUP_EXT"
+  [ "$BACKUP_EXT" = "rang-backup" ] || printf '%s\n' "rang-backup"
+}
+
 repair_repo_sources() {
   log "Checking for repo source files replaced by Home Manager"
 
@@ -41,9 +47,11 @@ repair_repo_sources() {
   do
     [ -d "$dir" ] || continue
 
-    find "$dir" -type f -name "*.$BACKUP_EXT" | while IFS= read -r backup; do
-      path=${backup%."$BACKUP_EXT"}
-      restore_repo_file_from_backup "$path"
+    backup_exts | while IFS= read -r backup_ext; do
+      find "$dir" -type f -name "*.$backup_ext" | while IFS= read -r backup; do
+        path=${backup%."$backup_ext"}
+        restore_repo_file_from_backup "$path" "$backup_ext"
+      done
     done
   done
 }
@@ -129,14 +137,14 @@ install_nix() {
     case "$reply" in
       ""|y|Y|yes|YES) ;;
       *)
-        log "error: nix is required to apply rang"
+        log "error: nix is required to apply damnenv"
         log "       install it with: sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon"
         exit 1
         ;;
     esac
   fi
 
-  installer="$(mktemp "${TMPDIR:-/tmp}/rang-nix-install.XXXXXX")"
+  installer="$(mktemp "${TMPDIR:-/tmp}/damnenv-nix-install.XXXXXX")"
   if ! download_file "https://nixos.org/nix/install" "$installer"; then
     rm -f "$installer"
     log "error: could not download the Nix installer (need curl or wget)"
@@ -164,7 +172,7 @@ is_repo_managed_symlink() {
 
   link="$(readlink "$path" 2>/dev/null || true)"
   case "$link" in
-    "$DOTFILES_DIR"/*|../WM-Theme/*|../rang/*|*/WM-Theme/*|*/rang/*) return 0 ;;
+    "$DOTFILES_DIR"/*|../WM-Theme/*|../damnenv/*|../rang/*|*/WM-Theme/*|*/damnenv/*|*/rang/*) return 0 ;;
   esac
 
   if has_cmd realpath; then
@@ -181,12 +189,10 @@ usage() {
   cat <<EOF
 Usage: ./bootstrap.sh [options]
 
-Applies the rang Home Manager setup and selects a theme.
+Applies the damnenv Home Manager setup and selects a theme.
 
   --theme THEME    Apply a specific theme directly
   --yes            Non-interactive (default theme: night-owl)
-  --theme THEME             Apply a specific theme directly
-  --yes                     Non-interactive (default theme: night-owl)
   --remove-fedora-overlap   Remove overlapping Fedora RPM packages after a successful apply
   -h, --help
 EOF
@@ -194,12 +200,10 @@ EOF
 
 require_theme_assets() {
   chosen="$1"
-  for rel in alacritty.toml ghostty.conf nvim-theme.lua sway-colors.conf tmux.conf waybar-colors.css wofi-colors.css xmobarrc xmonad-colors.hs; do
-    [ -f "$THEMES_DIR/$chosen/$rel" ] || {
-      log "error: missing theme asset: $THEMES_DIR/$chosen/$rel"
-      exit 1
-    }
-  done
+  [ -f "$THEMES_DIR/$chosen.json" ] || {
+    log "error: unknown theme: $chosen (no $THEMES_DIR/$chosen.json)"
+    exit 1
+  }
 }
 
 choose_theme() {
@@ -214,11 +218,11 @@ choose_theme() {
     return 0
   fi
 
-  log "Select a rang theme:"
+  log "Select a damnenv theme:"
   choices=""
-  for d in "$THEMES_DIR"/*; do
-    [ -d "$d" ] || continue
-    name="$(basename "$d")"
+  for f in "$THEMES_DIR"/*.json; do
+    [ -f "$f" ] || continue
+    name="$(basename "$f" .json)"
     choices="${choices}
 ${name}"
   done
@@ -336,7 +340,7 @@ remove_fedora_overlap() {
   fi
 
   log ""
-  log "Fedora RPM packages also provided by rang:"
+  log "Fedora RPM packages also provided by damnenv:"
   printf '  %s\n' $packages
 
   if [ "$ASSUME_YES" -ne 1 ] && [ -t 0 ]; then
@@ -360,7 +364,7 @@ remove_fedora_overlap() {
 }
 
 apply_home_manager() {
-  export RANG_THEME="$THEME"
+  export DAMNENV_THEME="$THEME"
   load_nix_env || install_nix
   ensure_nix_features
 
@@ -383,37 +387,8 @@ apply_home_manager() {
   run_nix run github:nix-community/home-manager -- switch -b "$BACKUP_EXT" --impure --flake "path:$DOTFILES_DIR#default"
 }
 
-reload_runtime() {
-  log ""
-  log "Reloading live programs for theme: $THEME"
-
-  if has_cmd swaymsg && wm_is_running sway; then
-    swaymsg reload >/dev/null 2>&1 && log "  reloaded: sway" || log "  warn: sway reload failed"
-  fi
-
-  if has_cmd tmux && tmux info >/dev/null 2>&1; then
-    tmux source-file ~/.tmux.conf \; refresh-client -S >/dev/null 2>&1 \
-      && log "  reloaded: tmux" \
-      || log "  warn: tmux reload failed"
-  fi
-
-  if has_cmd xmonad && wm_is_running xmonad; then
-    if xmonad --recompile >/dev/null 2>&1; then
-      xmonad --restart >/dev/null 2>&1 && log "  reloaded: xmonad" || log "  warn: xmonad restart failed"
-    else
-      log "  warn: xmonad recompile failed"
-    fi
-  fi
-
-  if [ -f "$HOME/.config/alacritty/alacritty.toml" ]; then
-    touch "$HOME/.config/alacritty/alacritty.toml" "$HOME/.config/alacritty/theme.toml" 2>/dev/null || true
-    log "  nudged: alacritty"
-  fi
-
-  if [ -f "$HOME/.config/ghostty/config" ]; then
-    touch "$HOME/.config/ghostty/config" "$HOME/.config/ghostty/theme" 2>/dev/null || true
-    log "  nudged: ghostty"
-  fi
+apply_theme() {
+  "$DOTFILES_DIR/scripts/set-theme.sh" "$THEME"
 }
 
 while [ "$#" -gt 0 ]; do
@@ -442,13 +417,13 @@ while [ "$#" -gt 0 ]; do
 done
 
 choose_theme
-log "Applying rang with theme: $THEME"
+log "Applying damnenv with theme: $THEME"
 migrate_legacy_links
 apply_home_manager
 repair_repo_sources
 migrate_legacy_links
 apply_home_manager
 remove_fedora_overlap
-reload_runtime
+apply_theme
 log ""
-log "rang applied."
+log "damnenv applied."

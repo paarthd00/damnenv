@@ -36,11 +36,11 @@ typeset -U fpath
 setopt correct
 
 # zsh-autocomplete expects to manage compinit itself and is only useful in real terminals.
-if [[ "$TERM" != "dumb" ]] && [[ -r "$RANG_ZSH_AUTOCOMPLETE" ]]; then
-  source "$RANG_ZSH_AUTOCOMPLETE"
+if [[ "$TERM" != "dumb" ]] && [[ -r "$DAMNENV_ZSH_AUTOCOMPLETE" ]]; then
+  source "$DAMNENV_ZSH_AUTOCOMPLETE"
 fi
-[[ -r "$RANG_ZSH_POWERLEVEL10K" ]] && source "$RANG_ZSH_POWERLEVEL10K"
-[[ -r "$RANG_ZSH_AUTOSUGGESTIONS" ]] && source "$RANG_ZSH_AUTOSUGGESTIONS"
+[[ -r "$DAMNENV_ZSH_POWERLEVEL10K" ]] && source "$DAMNENV_ZSH_POWERLEVEL10K"
+[[ -r "$DAMNENV_ZSH_AUTOSUGGESTIONS" ]] && source "$DAMNENV_ZSH_AUTOSUGGESTIONS"
 
 # ───────────────────────────────────────────────────────────────────
 #  PATH
@@ -108,8 +108,8 @@ command -v devcontainer &>/dev/null && {
 # ───────────────────────────────────────────────────────────────────
 #  FZF
 # ───────────────────────────────────────────────────────────────────
-[[ -r "$RANG_FZF_COMPLETION" ]] && source "$RANG_FZF_COMPLETION"
-[[ -r "$RANG_FZF_KEY_BINDINGS" ]] && source "$RANG_FZF_KEY_BINDINGS"
+[[ -r "$DAMNENV_FZF_COMPLETION" ]] && source "$DAMNENV_FZF_COMPLETION"
+[[ -r "$DAMNENV_FZF_KEY_BINDINGS" ]] && source "$DAMNENV_FZF_KEY_BINDINGS"
 
 # Use fd if available, fallback to find
 if command -v fd &>/dev/null; then
@@ -192,7 +192,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # Syntax highlighting should load after other shell widgets and completions.
-[[ -r "$RANG_ZSH_SYNTAX_HIGHLIGHTING" ]] && source "$RANG_ZSH_SYNTAX_HIGHLIGHTING"
+[[ -r "$DAMNENV_ZSH_SYNTAX_HIGHLIGHTING" ]] && source "$DAMNENV_ZSH_SYNTAX_HIGHLIGHTING"
 
 # ───────────────────────────────────────────────────────────────────
 #  Startup Banner (causes prompt jump - remove if unwanted)

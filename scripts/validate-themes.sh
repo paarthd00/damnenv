@@ -1,58 +1,44 @@
 #!/usr/bin/env sh
+# Validates that all theme JSON files are well-formed and have required fields.
 set -eu
 
 ROOT_DIR="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd -P)"
 THEMES_DIR="$ROOT_DIR/themes"
-required_files='alacritty.toml ghostty.conf nvim-theme.lua sway-colors.conf tmux.conf waybar-colors.css wofi-colors.css xmobarrc xmonad-colors.hs'
 status=0
 
-extract_alacritty_color() {
-  file="$1"
-  key="$2"
-  awk -F'"' -v key="$key" '
-    $0 ~ "\\[colors.primary\\]" { in_primary = 1; next }
-    in_primary && $0 ~ /^\[/ { in_primary = 0 }
-    in_primary && $0 ~ key" = " { print $2; exit }
-  ' "$file"
-}
+if ! command -v jq >/dev/null 2>&1; then
+  echo "error: jq is required" >&2; exit 1
+fi
 
-extract_ghostty_color() {
-  file="$1"
-  key="$2"
-  awk -F'= ' -v key="$key" '$1 == key { print $2; exit }' "$file"
-}
+required_fields='
+  .background .foreground .cursor .cursor_text .selection_bg
+  .bg2 .border .fg_dim .accent
+  .normal.black .normal.red .normal.green .normal.yellow
+  .normal.blue .normal.magenta .normal.cyan .normal.white
+  .bright.black .bright.red .bright.green .bright.yellow
+  .bright.blue .bright.magenta .bright.cyan .bright.white
+  .xmonad.current .xmonad.visible .xmonad.hidden .xmonad.hidden_no_win
+  .xmonad.title .xmonad.layout
+  .nvim.colorscheme .nvim.transparent
+'
 
-for theme_dir in "$THEMES_DIR"/*; do
-  [ -d "$theme_dir" ] || continue
-  theme_name="$(basename "$theme_dir")"
+for json in "$THEMES_DIR"/*.json; do
+  name="$(basename "$json" .json)"
 
-  for rel in $required_files; do
-    if [ ! -f "$theme_dir/$rel" ]; then
-      printf 'missing: %s/%s\n' "$theme_name" "$rel"
+  if ! jq empty "$json" 2>/dev/null; then
+    printf 'invalid json: %s\n' "$name"
+    status=1
+    continue
+  fi
+
+  for field in $required_fields; do
+    val="$(jq -r "$field" "$json")"
+    if [ "$val" = "null" ] || [ -z "$val" ]; then
+      printf 'missing field %s in %s\n' "$field" "$name"
       status=1
     fi
   done
-
-  if [ -f "$theme_dir/alacritty.toml" ] && [ -f "$theme_dir/ghostty.conf" ]; then
-    a_bg="$(extract_alacritty_color "$theme_dir/alacritty.toml" background)"
-    a_fg="$(extract_alacritty_color "$theme_dir/alacritty.toml" foreground)"
-    g_bg="$(extract_ghostty_color "$theme_dir/ghostty.conf" background)"
-    g_fg="$(extract_ghostty_color "$theme_dir/ghostty.conf" foreground)"
-
-    if [ -n "${a_bg:-}" ] && [ -n "${g_bg:-}" ] && [ "#${a_bg#\#}" != "${g_bg}" ]; then
-      printf 'mismatch: %s background alacritty=%s ghostty=%s\n' "$theme_name" "$a_bg" "$g_bg"
-      status=1
-    fi
-
-    if [ -n "${a_fg:-}" ] && [ -n "${g_fg:-}" ] && [ "#${a_fg#\#}" != "${g_fg}" ]; then
-      printf 'mismatch: %s foreground alacritty=%s ghostty=%s\n' "$theme_name" "$a_fg" "$g_fg"
-      status=1
-    fi
-  fi
 done
 
-if [ "$status" -eq 0 ]; then
-  printf 'All theme assets validated.\n'
-fi
-
+[ "$status" -eq 0 ] && printf 'All theme assets validated.\n'
 exit "$status"

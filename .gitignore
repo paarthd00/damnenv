@@ -20,5 +20,6 @@ window-managers/sway/colors.conf
 window-managers/sway/waybar/colors.css
 
 # home-manager backup files
+**/*.damnenv-backup
 **/*.rang-backup
 **/*~*

@@ -1,5 +1,5 @@
 {
-  description = "Nix-first setup for rang";
+  description = "Nix-first setup for damnenv";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -27,11 +27,11 @@
           config.allowUnfree = true;
           overlays = [ nixgl.overlay ];
         };
-      rangModule = import ./nix/modules/rang.nix;
+      damnenvModule = import ./nix/modules/damnenv.nix;
     in
     {
-      homeManagerModules.default = rangModule;
-      homeManagerModules.rang = rangModule;
+      homeManagerModules.default = damnenvModule;
+      homeManagerModules.damnenv = damnenvModule;
 
       packages = forAllSystems (
         system:
@@ -39,14 +39,14 @@
           pkgs = mkPkgs system;
           packageSet = import ./nix/package-set.nix { inherit lib pkgs; };
           bundle = pkgs.buildEnv {
-            name = "rang-packages";
+            name = "damnenv-packages";
             paths = packageSet.full;
           };
         in
         {
           default = bundle;
-          rang = bundle;
-          rang-packages = bundle;
+          damnenv = bundle;
+          damnenv-packages = bundle;
         }
       );
 
@@ -64,7 +64,7 @@
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
-            rangModule
+            damnenvModule
             {
               home = {
                 inherit username homeDirectory;
@@ -73,10 +73,13 @@
 
               programs.home-manager.enable = true;
 
-              rang.enable = true;
-              rang.theme =
-                let value = builtins.getEnv "RANG_THEME"; in
-                if value != "" then value else "night-owl";
+              damnenv.enable = true;
+              damnenv.theme =
+                let
+                  value = builtins.getEnv "DAMNENV_THEME";
+                  legacyValue = builtins.getEnv "RANG_THEME";
+                in
+                if value != "" then value else if legacyValue != "" then legacyValue else "night-owl";
             }
           ];
         };
