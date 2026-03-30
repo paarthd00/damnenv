@@ -1,4 +1,6 @@
 
+import = ["~/.config/alacritty/theme.toml"]
+
 [env]
 TERM = "xterm-256color"
 XMODIFIERS = "@im=none"
@@ -109,6 +111,3 @@ action = "ResetFontSize"
 key = "N"
 mods = "Control|Shift"
 action = "SpawnNewInstance"
-
-[general]
-import = ["~/.config/alacritty/theme.toml"]

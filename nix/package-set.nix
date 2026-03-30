@@ -1,22 +1,29 @@
 { lib, pkgs }:
 let
+  isLinux = pkgs.stdenv.isLinux;
   # Wrap a package so it runs through nixGL, fixing OpenGL/EGL on non-NixOS.
   # AMD and Intel both use Mesa, so nixGLIntel is the right wrapper.
-  nixGLWrap = pkg:
+  nixGLWrap = if isLinux then (pkg:
     let
       exeName = pkg.meta.mainProgram or (lib.getName pkg);
     in
     pkgs.writeShellScriptBin exeName ''
       exec ${pkgs.nixgl.nixGLIntel}/bin/nixGLIntel ${pkg}/bin/${exeName} "$@"
-    '';
+    '')
+  else
+    (pkg: pkg);
 
-  zedCli = pkgs.writeShellScriptBin "zed" ''
-  exec ${pkgs.nixgl.nixGLIntel}/bin/nixGLIntel ${pkgs.zed-editor}/bin/zeditor "$@"
-  '';
+  zedCli = if isLinux then
+    pkgs.writeShellScriptBin "zed" ''
+    exec ${pkgs.nixgl.nixGLIntel}/bin/nixGLIntel ${pkgs.zed-editor}/bin/zeditor "$@"
+    ''
+  else
+    null;
 
   common = with pkgs; [
     git
     curl
+    jq
     neovim
     nodejs
     ripgrep
@@ -28,16 +35,14 @@ let
     eza
   ];
 
-  desktop = with pkgs; [
+  desktop = if isLinux then (with pkgs; [
     (nixGLWrap alacritty)
     (nixGLWrap ghostty)
     (nixGLWrap zed-editor)
     zedCli
-  ];
+  ]) else [ ];
 
-  firefox = [
-    (nixGLWrap pkgs.firefox)
-  ];
+  firefox = if isLinux then [ (nixGLWrap pkgs.firefox) ] else [ ];
 
   aiCli = with pkgs; [
     claude-code
@@ -48,7 +53,7 @@ let
   # User-space Wayland tools that make sense in a Home Manager profile.
   # Fedora should continue to own services like NetworkManager, Bluetooth,
   # PipeWire/WirePlumber, and related system packages.
-  sway = [
+  sway = if isLinux then [
     (nixGLWrap pkgs.sway)        # wlroots compositor — needs EGL/DRI access
     pkgs.waybar                  # GTK, software rendering OK
     pkgs.wofi                    # GTK, software rendering OK
@@ -59,13 +64,13 @@ let
     pkgs.brightnessctl
     pkgs.wl-clipboard
     pkgs.xdg-utils
-  ];
+  ] else [ ];
 
-  xmonad = [
+  xmonad = if isLinux then [
     pkgs.haskellPackages.xmonad
     pkgs.haskellPackages.xmonad-contrib
     pkgs.haskellPackages.xmobar
-  ];
+  ] else [ ];
 
   fonts = with pkgs; [
     fira-code

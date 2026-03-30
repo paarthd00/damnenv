@@ -19,6 +19,8 @@
       systems = [
         "x86_64-linux"
         "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
       ];
       forAllSystems = lib.genAttrs systems;
       mkPkgs = system:
@@ -52,7 +54,7 @@
 
       homeConfigurations.default =
         let
-          system = "x86_64-linux";
+          system = builtins.currentSystem;
           pkgs = mkPkgs system;
           username =
             let value = builtins.getEnv "USER"; in

@@ -120,11 +120,28 @@ experimental-features = ${NIX_EXPERIMENTAL_FEATURES}"
   fi
 }
 
+set_nix_log_format_if_needed() {
+  case "$(uname -s)" in
+    Darwin)
+      case "${NIX_CONFIG-}" in
+        *log-format*) return 0 ;;
+      esac
+      if [ -n "${NIX_CONFIG-}" ]; then
+        export NIX_CONFIG="${NIX_CONFIG}
+log-format = raw"
+      else
+        export NIX_CONFIG="log-format = raw"
+      fi
+      ;;
+  esac
+}
+
 install_nix() {
   load_nix_env && return 0
 
   case "$(uname -s)" in
     Linux) ;;
+    Darwin) ;;
     *)
       log "error: automatic Nix installation is only supported here on Linux"
       exit 1
@@ -144,20 +161,40 @@ install_nix() {
     esac
   fi
 
-  installer="$(mktemp "${TMPDIR:-/tmp}/damnenv-nix-install.XXXXXX")"
-  if ! download_file "https://nixos.org/nix/install" "$installer"; then
-    rm -f "$installer"
-    log "error: could not download the Nix installer (need curl or wget)"
-    exit 1
-  fi
+  case "$(uname -s)" in
+    Darwin)
+      installer="$(mktemp "${TMPDIR:-/tmp}/damnenv-nix-install.XXXXXX")"
+      if ! download_file "https://install.determinate.systems/nix" "$installer"; then
+        rm -f "$installer"
+        log "error: could not download the Determinate Nix installer (need curl or wget)"
+        exit 1
+      fi
 
-  log "Installing Nix (single-user)..."
-  if ! sh "$installer" --no-daemon; then
-    rm -f "$installer"
-    log "error: Nix installation failed"
-    exit 1
-  fi
-  rm -f "$installer"
+      log "Installing Nix (daemon, Determinate installer)..."
+      if ! sh "$installer" install; then
+        rm -f "$installer"
+        log "error: Nix installation failed"
+        exit 1
+      fi
+      rm -f "$installer"
+      ;;
+    *)
+      installer="$(mktemp "${TMPDIR:-/tmp}/damnenv-nix-install.XXXXXX")"
+      if ! download_file "https://nixos.org/nix/install" "$installer"; then
+        rm -f "$installer"
+        log "error: could not download the Nix installer (need curl or wget)"
+        exit 1
+      fi
+
+      log "Installing Nix (single-user)..."
+      if ! sh "$installer" --no-daemon; then
+        rm -f "$installer"
+        log "error: Nix installation failed"
+        exit 1
+      fi
+      rm -f "$installer"
+      ;;
+  esac
 
   if ! load_nix_env; then
     log "error: Nix installed, but this shell could not load it"
@@ -367,6 +404,7 @@ apply_home_manager() {
   export DAMNENV_THEME="$THEME"
   load_nix_env || install_nix
   ensure_nix_features
+  set_nix_log_format_if_needed
 
   if has_cmd home-manager; then
     log "Applying Home Manager via installed home-manager"

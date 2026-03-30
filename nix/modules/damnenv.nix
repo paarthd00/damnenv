@@ -276,7 +276,7 @@ in
 
       sway = lib.mkOption {
         type = lib.types.bool;
-        default = true;
+        default = pkgs.stdenv.isLinux;
         description = "Manage the Sway, Waybar, and Wofi configs.";
       };
 
@@ -288,7 +288,7 @@ in
 
       xmonad = lib.mkOption {
         type = lib.types.bool;
-        default = true;
+        default = pkgs.stdenv.isLinux;
         description = "Manage the XMonad config and theme files.";
       };
 
@@ -315,7 +315,8 @@ in
       }
 
       (lib.optionalAttrs cfg.manage.zsh {
-        ".zshrc".text = ''
+        ".zshrc" = {
+          text  = ''
           export DAMNENV_ZSH_POWERLEVEL10K="${pkgs.zsh-powerlevel10k}/share/zsh/themes/powerlevel10k/powerlevel10k.zsh-theme"
           export DAMNENV_ZSH_AUTOCOMPLETE="${pkgs.zsh-autocomplete}/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
           export DAMNENV_ZSH_AUTOSUGGESTIONS="${pkgs.zsh-autosuggestions}/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -324,10 +325,21 @@ in
           export DAMNENV_FZF_KEY_BINDINGS="${pkgs.fzf}/share/fzf/key-bindings.zsh"
 
           ${builtins.readFile (repo + "/home/profile/zsh_rc.zsh")}
-        '';
-        ".zprofile".source = repo + "/home/profile/zsh_profile.zsh";
-        ".zshenv".source = repo + "/home/profile/zsh_env.zsh";
-        ".p10k.zsh".source = repo + "/home/profile/zsh_p10k.zsh";
+          '';
+          force = true;
+        };
+        ".zprofile" = {
+          source = repo + "/home/profile/zsh_profile.zsh";
+          force = true;
+        };
+        ".zshenv" = {
+          source = repo + "/home/profile/zsh_env.zsh";
+          force = true;
+        };
+        ".p10k.zsh" = {
+          source = repo + "/home/profile/zsh_p10k.zsh";
+          force = true;
+        };
       })
 
       (lib.optionalAttrs cfg.manage.tmux {
@@ -351,8 +363,8 @@ in
       })
     ];
 
-    xdg.desktopEntries = lib.mkMerge [
-      (lib.optionalAttrs cfg.packageSets.desktop {
+  xdg.desktopEntries = lib.mkMerge [
+      (lib.optionalAttrs (pkgs.stdenv.isLinux && cfg.packageSets.desktop) {
         zed = {
           name = "Zed";
           genericName = "Text Editor";
