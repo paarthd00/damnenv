@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, repoRoot, ... }:
 let
   cfg = config.damnenv;
-  repo = ../..;
-  packageSet = import ../package-set.nix { inherit lib pkgs; };
+  repo = repoRoot;
+  packageSet = import (repoRoot + "/nix/package-set.nix") { inherit lib pkgs; };
   t = builtins.fromJSON (builtins.readFile (repo + "/themes/${cfg.theme}.json"));
   lightTheme = lib.hasInfix "light" cfg.theme;
   colorFgBg = if lightTheme then "0;15" else "15;0";

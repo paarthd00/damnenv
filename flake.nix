@@ -65,6 +65,7 @@
         in
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
+          extraSpecialArgs = { repoRoot = self; };
           modules = [
             damnenvModule
             {
